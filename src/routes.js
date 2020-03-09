@@ -6,6 +6,7 @@ import multerConfig from './config/multer';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
+import OrderController from './app/controllers/OrderController';
 import FileController from './app/controllers/FileController';
 
 const routes = new Router();
@@ -36,6 +37,12 @@ routes.get('/deliverymen', DeliverymanController.index);
 routes.post('/deliverymen', DeliverymanController.store);
 routes.put('/deliverymen/:id', DeliverymanController.update);
 routes.delete('/deliverymen/:id', DeliverymanController.delete);
+
+/**
+ * Orders
+ */
+routes.get('/orders', OrderController.index);
+routes.post('/orders', OrderController.store);
 
 /**
  * File upload

@@ -1,0 +1,20 @@
+<hr style="color:#ccc">
+
+<strong>Olá, {{ deliveryman }}</strong>
+<p>Foi cadastrada uma nova entrega para você efetuar. O produto está disponível para retirada.</p>
+<p>Confira os detalhes abaixo:</p>
+<p>
+  <strong>Cliente: </strong> {{ recipient }} <br />
+  <strong>Produto: </strong> {{ product }} <br />
+  <strong>Endereço: </strong> <br />
+  <ul>
+    <li><strong>Rua: </strong>{{ rua }}</li>
+    <li><strong>Número: </strong>{{ numero }}</li>
+    <li><strong>Complemento: </strong>{{ complemento }}</li>
+    <li><strong>Cidade: </strong>{{ cidade }}</li>
+    <li><strong>Estado: </strong>{{ estado }}</li>
+    <li><strong>CEP: </strong>{{ cep }}</li>
+  </ul>
+</p>
+
+<hr style="color:#ccc">
