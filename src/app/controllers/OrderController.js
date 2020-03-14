@@ -7,19 +7,12 @@ import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
 class OrderController {
-  /**
-   * start_date deve ser preenchida no momento de retirada do entregador
-   * end_date deve ser preenchida no momento da entrega
-   * recipient_id e deliveryman_id são obrigatórios no momento de criação da encomenda
-   * enviar email ao cadastrar o entregador
-   *
-   */
   async index(req, res) {
     const { page = 1 } = req.query;
 
     const orders = await Order.findAll({
       order: ['created_at'],
-      attributes: ['product', 'start_date', 'end_date', 'canceled_at'],
+      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
@@ -92,17 +85,63 @@ class OrderController {
 
     const orderMailData = {
       product,
-      deliveryman: deliveryman.toJSON(),
-      recipient: recipient.toJSON(),
+      deliveryman,
+      recipient,
     };
-
-    console.log(orderMailData);
 
     await Queue.add(OrderCreatedEmail.key, {
       orderMailData,
     });
 
     return res.status(201).json(order);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string(),
+      deliveryman_id: Yup.number(),
+      recipient_id: Yup.number(),
+    });
+
+    if (!(await schema.isValid())) {
+      return res.status(400).json({ error: 'Invalid schema' });
+    }
+
+    const order = await Order.findByPk(req.params.id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'Order does not exist' });
+    }
+
+    const {
+      id,
+      product,
+      recipient_id,
+      deliveryman_id,
+      createdAt,
+      updatedAt,
+    } = await order.update(req.body);
+
+    return res.json({
+      id,
+      product,
+      recipient_id,
+      deliveryman_id,
+      createdAt,
+      updatedAt,
+    });
+  }
+
+  async delete(req, res) {
+    const order = await Order.findByPk(req.params.id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'Order does not exist' });
+    }
+
+    await order.destroy();
+
+    return res.json({ message: 'Order removed successfully' });
   }
 }
 

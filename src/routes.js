@@ -7,6 +7,9 @@ import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import OrderController from './app/controllers/OrderController';
+import DeliveryController from './app/controllers/DeliveryController';
+import ProblemController from './app/controllers/ProblemController';
+
 import FileController from './app/controllers/FileController';
 
 const routes = new Router();
@@ -16,6 +19,18 @@ const upload = multer(multerConfig);
  * Authentication
  */
 routes.post('/sessions', SessionController.store);
+
+/**
+ * Orders (Deliveryman Acesss)
+ * TODO: create authentication by Deliveryman
+ */
+routes.get('/deliveryman/:id/orders', DeliveryController.index);
+routes.put('/deliveryman/:id/orders/:order_id', DeliveryController.update);
+
+/**
+ * Order Problems
+ */
+routes.put('/orders/:id/problems', ProblemController.update);
 
 /**
  * Token required for next routes from here
@@ -31,18 +46,20 @@ routes.put('/recipients/:id', RecipientController.update);
 routes.delete('/recipients/:id', RecipientController.delete);
 
 /**
- * Deliverymen
+ * Deliveryman
  */
-routes.get('/deliverymen', DeliverymanController.index);
-routes.post('/deliverymen', DeliverymanController.store);
-routes.put('/deliverymen/:id', DeliverymanController.update);
-routes.delete('/deliverymen/:id', DeliverymanController.delete);
+routes.get('/deliveryman', DeliverymanController.index);
+routes.post('/deliveryman', DeliverymanController.store);
+routes.put('/deliveryman/:id', DeliverymanController.update);
+routes.delete('/deliveryman/:id', DeliverymanController.delete);
 
 /**
- * Orders
+ * Orders (Admin access)
  */
 routes.get('/orders', OrderController.index);
 routes.post('/orders', OrderController.store);
+routes.put('/orders/:id', OrderController.update);
+routes.delete('/orders/:id', OrderController.delete);
 
 /**
  * File upload
